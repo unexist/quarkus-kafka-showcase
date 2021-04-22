@@ -1,0 +1,42 @@
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaUser
+metadata:
+  name: unexist
+  labels:
+    strimzi.io/cluster: kafka
+spec:
+  authentication:
+    type: tls
+  authorization:
+    type: simple
+    acls:
+      - resource:
+          type: topic
+          name: todo-titles
+          patternType: literal
+        operation: All
+        host: '*'
+      - resource:
+          type: topic
+          name: todo-descriptions
+          patternType: literal
+        operation: All
+        host: '*'
+      - resource:
+          type: group
+          name: group
+          patternType: literal
+        operation: Read
+        host: '*'
+      - resource:
+          type: topic
+          name: todo-titles
+          patternType: literal
+        operation: Write
+        host: '*'
+      - resource:
+          type: topic
+          name: todo-descriptions
+          patternType: literal
+        operation: Create
+        host: '*'
