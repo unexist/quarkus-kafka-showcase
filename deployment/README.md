@@ -15,6 +15,6 @@ Installation
 helm install strimzi/strimzi-kafka-operator --namespace operators --generate-name
 ```
 
+Configuration
 ----
-Configuratiuon
 
