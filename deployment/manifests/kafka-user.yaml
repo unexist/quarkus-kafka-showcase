@@ -1,9 +1,9 @@
-apiVersion: kafka.strimzi.io/v1beta1
+apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaUser
 metadata:
   name: unexist
   labels:
-    strimzi.io/cluster: kafka
+    strimzi.io/cluster: todo-kafka
 spec:
   authentication:
     type: tls
