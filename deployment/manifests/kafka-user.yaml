@@ -22,21 +22,3 @@ spec:
           patternType: literal
         operation: All
         host: '*'
-      - resource:
-          type: group
-          name: group
-          patternType: literal
-        operation: Read
-        host: '*'
-      - resource:
-          type: topic
-          name: todo-titles
-          patternType: literal
-        operation: Write
-        host: '*'
-      - resource:
-          type: topic
-          name: todo-descriptions
-          patternType: literal
-        operation: Create
-        host: '*'
