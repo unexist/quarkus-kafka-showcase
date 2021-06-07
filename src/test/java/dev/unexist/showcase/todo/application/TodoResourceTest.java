@@ -2,7 +2,7 @@
  * @package Quarkus-Kafka-Showcase
  *
  * @file Stupid integration test
- * @copyright 2019 Christoph Kappel <unexist@subforge.org>
+ * @copyright 2020-2021 Christoph Kappel <christoph@unexist.dev>
  * @version $Id$
  *
  * This program can be distributed under the terms of the GNU GPLv3.
