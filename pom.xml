@@ -12,16 +12,12 @@
         <version>0.1</version>
     </parent>
 
+    <properties>
+        <smallrye-reactive.version>3.4.0</smallrye-reactive.version>
+    </properties>
+
     <dependencies>
         <!-- Quarkus -->
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-minikube</artifactId>
-        </dependency>
-        <!--<dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-kubernetes</artifactId>
-        </dependency>-->
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-smallrye-health</artifactId>
@@ -37,6 +33,14 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-container-image-jib</artifactId>
+        </dependency>
+
+        <!-- Testing -->
+        <dependency>
+            <groupId>io.smallrye.reactive</groupId>
+            <artifactId>smallrye-reactive-messaging-in-memory</artifactId>
+            <version>${smallrye-reactive.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
