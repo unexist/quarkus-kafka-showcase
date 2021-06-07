@@ -36,16 +36,13 @@ public class TodoGenerator {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
-    private List<Todo> todos = Collections.unmodifiableList(
-            Arrays.asList(
-                    new Todo("First", "Bla"),
-                    new Todo("Second", "Bla-bla"),
-                    new Todo("Third", "Bla-bla-bla"),
-                    new Todo("Fourth", "Bla-bla-bla-bla"),
-                    new Todo("Fifth", "Bla-bla-bla-bla-bla"),
-                    new Todo("Sixth", "Bla-bla-bla-bla-bla-bla")
-            )
-    );
+    private List<Todo> todos = List.of(
+            new Todo("First", "Bla"),
+            new Todo("Second", "Bla-bla"),
+            new Todo("Third", "Bla-bla-bla"),
+            new Todo("Fourth", "Bla-bla-bla-bla"),
+            new Todo("Fifth", "Bla-bla-bla-bla-bla"),
+            new Todo("Sixth", "Bla-bla-bla-bla-bla-bla"));
 
     @Outgoing("todo-generator")
     public Multi<Record<Integer, String>> generateTodos() {
