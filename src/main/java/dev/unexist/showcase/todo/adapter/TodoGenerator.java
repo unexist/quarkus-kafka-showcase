@@ -10,7 +10,10 @@
 
 package dev.unexist.showcase.todo.adapter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.unexist.showcase.todo.domain.todo.Todo;
+import io.netty.util.internal.StringUtil;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.reactive.messaging.kafka.Record;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
@@ -29,7 +32,9 @@ public class TodoGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(TodoGenerator.class);
     private static final int MILLIS = 500;
 
-    private Random random = new Random();
+    private final Random random = new Random();
+
+    private final ObjectMapper mapper = new ObjectMapper();
 
     private List<Todo> todos = Collections.unmodifiableList(
             Arrays.asList(
@@ -42,31 +47,24 @@ public class TodoGenerator {
             )
     );
 
-    @Outgoing("todo-titles")
-    public Multi<Record<Integer, String>> generateTitles() {
+    @Outgoing("todo-generator")
+    public Multi<Record<Integer, String>> generateTodos() {
         return Multi.createFrom().ticks().every(Duration.ofMillis(MILLIS))
                 .onOverflow().drop()
                 .map(tick -> {
                     int idx = random.nextInt(todos.size());
                     Todo todo = todos.get(idx);
+                    String todoAsString = StringUtil.EMPTY_STRING;
 
-                    LOGGER.info("Todo[{}]: {}: {}", idx, todo.getTitle(),
-                            todo.getDescription());
-                    return Record.of(idx, todo.getTitle());
-                });
-    }
+                    try {
+                        todoAsString = this.mapper.writeValueAsString(todo);
+                    } catch (JsonProcessingException e) {
+                        LOGGER.error("Error converting todo", e);
+                    }
 
-    @Outgoing("todo-descriptions")
-    public Multi<Record<Integer, String>> generateDescriptions() {
-        return Multi.createFrom().ticks().every(Duration.ofMillis(MILLIS))
-                .onOverflow().drop()
-                .map(tick -> {
-                    int idx = random.nextInt(todos.size());
-                    Todo todo = todos.get(idx);
+                    LOGGER.info("Todo[{}]: {}", idx, todoAsString);
 
-                    LOGGER.info("Todo[{}]: {}: {}", idx, todo.getTitle(),
-                            todo.getDescription());
-                    return Record.of(idx, todo.getDescription());
+                    return Record.of(idx, todoAsString);
                 });
     }
 }
