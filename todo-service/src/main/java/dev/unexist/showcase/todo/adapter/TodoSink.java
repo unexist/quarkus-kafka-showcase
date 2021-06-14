@@ -25,10 +25,10 @@ import javax.inject.Inject;
 public class TodoSink {
     private static final Logger LOGGER = LoggerFactory.getLogger(TodoGenerator.class);
 
-    private final ObjectMapper mapper = new ObjectMapper();
-
     @Inject
     TodoService todoService;
+
+    private final ObjectMapper mapper = new ObjectMapper();
 
     @Incoming("todo-sink")
     public void consumeTodos(String json) {
