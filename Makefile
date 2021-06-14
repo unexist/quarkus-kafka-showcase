@@ -1,16 +1,35 @@
-.DEFAULT_GOAL := jib
+define JSON_TODO
+curl -X 'POST' \
+  'http://localhost:8080/todo' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "description": "string",
+  "done": true,
+  "dueDate": {
+    "due": "2021-05-07",
+    "start": "2021-05-07"
+  },
+  "title": "string"
+}'
+endef
+export JSON_TODO
 
-clean:
-	mvn clean
+# Docker
+.PHONY: docker
+docker:
+	@docker-compose -f docker/docker-compose-avro.yaml \
+		-p kafka-avro up
 
-build: clean
-	mvn build
+# Tools
+todo:
+	@echo $$JSON_TODO | bash
 
-run: clean
-	mvn -Pquarkus quarkus:dev
+listen-kt:
+	kt consume -topic todo_created
 
-minikube-docker:
-	eval $(minikube docker-env)
+listen-cat:
+	kafkacat -t todo_created -b localhost:9092 -C
 
-jib: clean minikube-docker
-	mvn -Pquarkus package -Dquarkus.container-image.build=true -Dquarkus.container-image.registry=
+test-cat:
+	kafkacat -t todo_created -b localhost:9092 -P
