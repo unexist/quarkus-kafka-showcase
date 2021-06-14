@@ -1,0 +1,51 @@
+version: "3.5"
+
+services:
+  # Install zookeeper
+  zookeeper:
+    container_name: zookeeper
+    image: confluentinc/cp-zookeeper
+    environment:
+      SERVICE_NAME: zookeeper
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 2181:2181
+
+  # Install kafka and create needed topics
+  kafka:
+    container_name: kafka
+    image: confluentinc/cp-kafka
+    hostname: kafka
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka:9092"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+
+  # Install schema registry
+  schema-registry:
+    container_name: registry
+    image: confluentinc/cp-schema-registry:4.1.0
+    hostname: registry
+    ports:
+      - "8081:8081"
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: "zookeeper:2181"
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "PLAINTEXT://kafka:9092"
+      SCHEMA_REGISTRY_HOST_NAME: registry
+    depends_on:
+      - kafka
+      - zookeeper
+
+  # Create topics
+  create-topics:
+    container_name: create-topics
+    image: confluentinc/cp-kafka
+    command: bash -c "kafka-topics --bootstrap-server kafka:9092 --create --topic todo_created --partitions 1 --replication-factor 1 --if-not-exists"
+    depends_on:
+      - kafka
+
