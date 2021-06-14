@@ -1,5 +1,5 @@
 {
-  "namespace": "dev.unexist.showcase",
+  "namespace": "dev.unexist.showcase.todo.generated.avro",
   "type": "record",
   "name": "Todov1",
   "fields": [
