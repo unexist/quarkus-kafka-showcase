@@ -10,29 +10,29 @@
 
 package dev.unexist.showcase.todo.adapter;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.unexist.showcase.todo.domain.todo.Todo;
-import io.netty.util.internal.StringUtil;
-import io.smallrye.mutiny.Multi;
-import io.smallrye.reactive.messaging.kafka.Record;
+import io.reactivex.Flowable;
+import io.smallrye.reactive.messaging.kafka.KafkaRecord;
+import org.apache.avro.Schema;
+import org.apache.avro.generic.GenericData;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
-import java.time.Duration;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 @ApplicationScoped
 public class TodoGenerator {
+    private static final int MILLIS = 5000;
     private static final Logger LOGGER = LoggerFactory.getLogger(TodoGenerator.class);
-    private static final int MILLIS = 500;
 
     private final Random random = new Random();
-
-    private final ObjectMapper mapper = new ObjectMapper();
 
     private List<Todo> todos = List.of(
             new Todo("First", "Bla"),
@@ -43,23 +43,27 @@ public class TodoGenerator {
             new Todo("Sixth", "Bla-bla-bla-bla-bla-bla"));
 
     @Outgoing("todo-generator")
-    public Multi<Record<Integer, String>> generateTodos() {
-        return Multi.createFrom().ticks().every(Duration.ofMillis(MILLIS))
-                .onOverflow().drop()
+    public Flowable<KafkaRecord<Integer, GenericData.Record>> generate() throws IOException {
+        Schema schemav1 = new Schema.Parser().parse(
+                new File(Objects.requireNonNull(getClass().getClassLoader().getResource("avro/todov1.avsc")).getFile())
+        );
+
+        Schema schemav2 = new Schema.Parser().parse(
+                new File(Objects.requireNonNull(getClass().getClassLoader().getResource("avro/todov2.avsc")).getFile())
+        );
+
+        return Flowable.interval(MILLIS, TimeUnit.MILLISECONDS)
+                .onBackpressureDrop()
                 .map(tick -> {
-                    int idx = random.nextInt(todos.size());
+                    int idx = random.nextInt(this.todos.size());
                     Todo todo = todos.get(idx);
-                    String todoAsString = StringUtil.EMPTY_STRING;
 
-                    try {
-                        todoAsString = this.mapper.writeValueAsString(todo);
-                    } catch (JsonProcessingException e) {
-                        LOGGER.error("Error converting todo", e);
-                    }
+                    GenericData.Record record = new GenericData.Record(0 == idx % 2 ? schemav1 : schemav2);
 
-                    LOGGER.info("Todo[{}]: {}", idx, todoAsString);
+                    record.put("title", todo.getTitle());
+                    record.put("description", todo.getDescription());
 
-                    return Record.of(idx, todoAsString);
+                    return KafkaRecord.of(idx, record);
                 });
     }
 }

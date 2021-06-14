@@ -28,7 +28,7 @@ import java.util.Random;
 @ApplicationScoped
 public class TodoGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(TodoGenerator.class);
-    private static final int MILLIS = 500;
+    private static final int MILLIS = 5000;
 
     private final Random random = new Random();
 
@@ -49,6 +49,7 @@ public class TodoGenerator {
                 .map(tick -> {
                     int idx = random.nextInt(todos.size());
                     Todo todo = todos.get(idx);
+
                     String todoAsString = StringUtil.EMPTY_STRING;
 
                     try {

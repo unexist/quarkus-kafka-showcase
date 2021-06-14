@@ -10,38 +10,25 @@
 
 package dev.unexist.showcase.todo.adapter;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.unexist.showcase.todo.domain.todo.TodoBase;
-import dev.unexist.showcase.todo.domain.todo.TodoService;
+import io.smallrye.reactive.messaging.kafka.KafkaMessage;
+import org.apache.avro.generic.GenericData;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 
 @ApplicationScoped
 public class TodoSink {
     private static final Logger LOGGER = LoggerFactory.getLogger(TodoGenerator.class);
 
-    @Inject
-    TodoService todoService;
-
-    private final ObjectMapper mapper = new ObjectMapper();
-
     @Incoming("todo-sink")
-    public void consumeTodos(String json) {
-        TodoBase todo = null;
-
-        try {
-            todo = this.mapper.readValue(json, TodoBase.class);
-        } catch (JsonProcessingException e) {
-            LOGGER.error("Error reading JSON", e);
-        }
-
-        todoService.create(todo);
+    public CompletionStage<Void> receive(KafkaMessage<String, GenericData.Record> message) throws IOException {
+        return CompletableFuture.runAsync(() -> {
+            LOGGER.error("Read: {}", message.getPayload());
+        });
     }
 }
-
-
