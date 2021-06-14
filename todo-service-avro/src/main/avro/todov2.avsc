@@ -1,0 +1,19 @@
+{
+  "namespace": "dev.unexist.showcase",
+  "type": "record",
+  "name": "Todov2",
+  "fields": [
+    {
+      "name": "title",
+      "type": "string"
+    },
+    {
+      "name": "description",
+      "type": "string"
+    },
+    {
+      "name": "done",
+      "type": "boolean"
+    }
+  ]
+}
