@@ -8,8 +8,9 @@
 
     <parent>
         <groupId>dev.unexist.showcase</groupId>
-        <artifactId>java-parent</artifactId>
+        <artifactId>quarkus-kafka-showcase</artifactId>
         <version>0.1</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <properties>
