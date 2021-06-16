@@ -29,7 +29,7 @@ listen-kt:
 	kt consume -topic todo_created
 
 listen-cat:
-	kafkacat -t todo_created -b localhost:9092 -C
+	kafkacat -t todo_created -b localhost:9092 -C -s value=avro -r http://localhost:8081
 
 test-cat:
 	kafkacat -t todo_created -b localhost:9092 -P

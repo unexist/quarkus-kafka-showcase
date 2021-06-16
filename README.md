@@ -6,12 +6,24 @@ todo-service
 ----
 This example just demonstrates how to use kafka along with in-memory testing of Smallrye.
 
-todo-service-avro
+todo-service-apicurio
 ----
-This uses avro as a schema registry.
+This uses the Avro format and Apicurio as registry.
+
+Notes
+----
+- Schema registry must be >2.0 to be compatible with the dependencies/plugin
+
+Apicurio config
+----
+https://www.apicur.io/registry/docs/apicurio-registry/2.0.0.Final/getting-started/assembly-using-kafka-client-serdes.html
 
 Links
 ----
 https://quarkus.io/blog/kafka-avro/
+https://github.com/cescoffier/quarkus-kafka-and-avro
+https://www.apicur.io/registry/
 https://github.com/Apicurio/apicurio-registry-operator#quickstart
+https://github.com/hguerrero/amq-examples/tree/master/registry-example-avro
 https://developers.redhat.com/blog/2019/12/16/getting-started-with-red-hat-integration-service-registry
+https://www.apicur.io/registry/docs/apicurio-registry/2.0.0.Final/getting-started/assembly-managing-registry-artifacts-maven.html
