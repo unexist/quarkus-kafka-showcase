@@ -27,3 +27,4 @@ https://github.com/Apicurio/apicurio-registry-operator#quickstart
 https://github.com/hguerrero/amq-examples/tree/master/registry-example-avro
 https://developers.redhat.com/blog/2019/12/16/getting-started-with-red-hat-integration-service-registry
 https://www.apicur.io/registry/docs/apicurio-registry/2.0.0.Final/getting-started/assembly-managing-registry-artifacts-maven.html
+http://avro.apache.org/docs/current/gettingstartedjava.html#Creating+Users
