@@ -10,14 +10,13 @@
 
 package dev.unexist.showcase.todo.adapter;
 
-import io.smallrye.reactive.messaging.kafka.KafkaMessage;
-import org.apache.avro.generic.GenericData;
+import io.smallrye.reactive.messaging.kafka.KafkaRecord;
+import org.apache.avro.specific.SpecificRecord;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
-import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
@@ -26,9 +25,11 @@ public class TodoSink {
     private static final Logger LOGGER = LoggerFactory.getLogger(TodoGenerator.class);
 
     @Incoming("todo-sink")
-    public CompletionStage<Void> receive(KafkaMessage<String, GenericData.Record> message) throws IOException {
+    public CompletionStage<Void> receive(KafkaRecord<Integer, SpecificRecord> message) {
         return CompletableFuture.runAsync(() -> {
-            LOGGER.error("Read: {}", message.getPayload());
+            LOGGER.error("Read: {}: {}", message.getPayload().getSchema().getFullName(), message.getPayload());
+
+            message.ack();
         });
     }
 }
