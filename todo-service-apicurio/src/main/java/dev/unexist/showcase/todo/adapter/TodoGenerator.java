@@ -50,20 +50,20 @@ public class TodoGenerator {
                     Todo todo = todos.get(idx);
 
                     if (0 == idx % 2) {
-                        Todov1 todov1 = new Todov1();
-
-                        todov1.setTitle(todo.getTitle());
-                        todov1.setDescription(todo.getDescription());
+                        Todov1 todov1 = Todov1.newBuilder()
+                            .setTitle(todo.getTitle())
+                            .setDescription(todo.getDescription())
+                            .build();
 
                         LOGGER.info("Send v1 {}", idx);
 
                         return KafkaRecord.of(idx, todov1);
                     } else {
-                        Todov2 todov2 = new Todov2();
-
-                        todov2.setTitle(todo.getTitle());
-                        todov2.setDescription(todo.getDescription());
-                        todov2.setDone(BooleanUtils.isTrue(todo.getDone()));
+                        Todov2 todov2 = Todov2.newBuilder()
+                            .setTitle(todo.getTitle())
+                            .setDescription(todo.getDescription())
+                            .setDone(BooleanUtils.isTrue(todo.getDone()))
+                            .build();
 
                         LOGGER.info("Send v2 {}", idx);
 
