@@ -15,6 +15,6 @@
 
     <modules>
         <module>todo-service</module>
-        <module>todo-service-avro</module>
+        <module>todo-service-apicurio</module>
     </modules>
 </project>

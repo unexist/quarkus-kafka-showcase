@@ -11,25 +11,24 @@
 package dev.unexist.showcase.todo.adapter;
 
 import dev.unexist.showcase.todo.domain.todo.Todo;
+import dev.unexist.showcase.todo.generated.avro.Todov1;
+import dev.unexist.showcase.todo.generated.avro.Todov2;
 import io.reactivex.Flowable;
 import io.smallrye.reactive.messaging.kafka.KafkaRecord;
-import org.apache.avro.Schema;
-import org.apache.avro.generic.GenericData;
+import org.apache.avro.specific.SpecificRecord;
+import org.apache.commons.lang3.BooleanUtils;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 @ApplicationScoped
 public class TodoGenerator {
-    private static final int MILLIS = 5000;
+    private static final int SECONDS = 30;
     private static final Logger LOGGER = LoggerFactory.getLogger(TodoGenerator.class);
 
     private final Random random = new Random();
@@ -43,27 +42,33 @@ public class TodoGenerator {
             new Todo("Sixth", "Bla-bla-bla-bla-bla-bla"));
 
     @Outgoing("todo-generator")
-    public Flowable<KafkaRecord<Integer, GenericData.Record>> generate() throws IOException {
-        Schema schemav1 = new Schema.Parser().parse(
-                new File(Objects.requireNonNull(getClass().getClassLoader().getResource("avro/todov1.avsc")).getFile())
-        );
-
-        Schema schemav2 = new Schema.Parser().parse(
-                new File(Objects.requireNonNull(getClass().getClassLoader().getResource("avro/todov2.avsc")).getFile())
-        );
-
-        return Flowable.interval(MILLIS, TimeUnit.MILLISECONDS)
+    public Flowable<KafkaRecord<Integer, SpecificRecord>> generate() {
+        return Flowable.interval(SECONDS, TimeUnit.SECONDS)
                 .onBackpressureDrop()
                 .map(tick -> {
                     int idx = random.nextInt(this.todos.size());
                     Todo todo = todos.get(idx);
 
-                    GenericData.Record record = new GenericData.Record(0 == idx % 2 ? schemav1 : schemav2);
+                    if (0 == idx % 2) {
+                        Todov1 todov1 = new Todov1();
 
-                    record.put("title", todo.getTitle());
-                    record.put("description", todo.getDescription());
+                        todov1.setTitle(todo.getTitle());
+                        todov1.setDescription(todo.getDescription());
 
-                    return KafkaRecord.of(idx, record);
+                        LOGGER.info("Send v1 {}", idx);
+
+                        return KafkaRecord.of(idx, todov1);
+                    } else {
+                        Todov2 todov2 = new Todov2();
+
+                        todov2.setTitle(todo.getTitle());
+                        todov2.setDescription(todo.getDescription());
+                        todov2.setDone(BooleanUtils.isTrue(todo.getDone()));
+
+                        LOGGER.info("Send v2 {}", idx);
+
+                        return KafkaRecord.of(idx, todov2);
+                    }
                 });
     }
 }
