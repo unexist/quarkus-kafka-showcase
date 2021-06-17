@@ -55,7 +55,7 @@ public class TodoGenerator {
                             .setDescription(todo.getDescription())
                             .build();
 
-                        LOGGER.info("Send v1 {}", idx);
+                        LOGGER.info("Send v1: idx={}", idx);
 
                         return KafkaRecord.of(idx, todov1);
                     } else {
@@ -65,7 +65,7 @@ public class TodoGenerator {
                             .setDone(BooleanUtils.isTrue(todo.getDone()))
                             .build();
 
-                        LOGGER.info("Send v2 {}", idx);
+                        LOGGER.info("Send v2: idx={}", idx);
 
                         return KafkaRecord.of(idx, todov2);
                     }

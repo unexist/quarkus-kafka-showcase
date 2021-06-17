@@ -10,6 +10,8 @@
 
 package dev.unexist.showcase.todo.adapter;
 
+import dev.unexist.showcase.todo.generated.avro.Todov1;
+import dev.unexist.showcase.todo.generated.avro.Todov2;
 import io.smallrye.reactive.messaging.kafka.KafkaRecord;
 import org.apache.avro.specific.SpecificRecord;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
@@ -29,7 +31,20 @@ public class TodoSink {
         return CompletableFuture.runAsync(() -> {
             LOGGER.error("Read: {}: {}", message.getPayload().getSchema().getFullName(), message.getPayload());
 
+            if (Todov1.getClassSchema().equals(message.getPayload().getSchema())) {
+                Todov1 todov1 = (Todov1)message.getPayload();
+
+                LOGGER.info("Got v1: title={}, description={}",
+                        todov1.getTitle(), todov1.getDescription());
+            } else if (Todov2.getClassSchema().equals(message.getPayload().getSchema())) {
+                Todov2 todov2 = (Todov2)message.getPayload();
+
+                LOGGER.info("Got v2: title={}, description={}, done={}",
+                        todov2.getTitle(), todov2.getDescription(), todov2.getDone());
+            }
+
             message.ack();
         });
     }
+
 }
