@@ -1,25 +1,25 @@
-Quarkus kafka showcase
-====
+= Showcase for kafka based on quarkus
+
 This project holds a showcase for various kafka related things.
 
-todo-service
-----
+== todo-service
+
 This example just demonstrates how to use kafka along with in-memory testing of Smallrye.
 
-todo-service-apicurio
-----
+== todo-service-apicurio
+
 This uses the Avro format and Apicurio as registry.
 
-Notes
-----
+== Notes
+
 - Schema registry must be >2.0 to be compatible with the dependencies/plugin
 
-Apicurio config
-----
+=== Apicurio config
+
 https://www.apicur.io/registry/docs/apicurio-registry/2.0.0.Final/getting-started/assembly-using-kafka-client-serdes.html
 
-Links
-----
+== Links
+
 https://quarkus.io/blog/kafka-avro/
 https://github.com/cescoffier/quarkus-kafka-and-avro
 https://www.apicur.io/registry/
