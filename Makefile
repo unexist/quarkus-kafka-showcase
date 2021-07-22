@@ -25,6 +25,9 @@ docker:
 todo:
 	@echo $$JSON_TODO | bash
 
+list:
+	@curl -X 'GET' 'http://localhost:8080/todo' -H 'accept: */*' | jq .
+
 listen-kt:
 	kt consume -topic todo_created
 
