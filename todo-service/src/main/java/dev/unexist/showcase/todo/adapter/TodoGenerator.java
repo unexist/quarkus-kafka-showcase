@@ -28,7 +28,7 @@ import java.util.Random;
 @ApplicationScoped
 public class TodoGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(TodoGenerator.class);
-    private static final int MILLIS = 5000;
+    private static final int SECONDS = 300;
 
     private final Random random = new Random();
 
@@ -44,7 +44,9 @@ public class TodoGenerator {
 
     @Outgoing("todo-generator")
     public Multi<Record<Integer, String>> generateTodos() {
-        return Multi.createFrom().ticks().every(Duration.ofMillis(MILLIS))
+        return Multi.createFrom()
+                .ticks()
+                .every(Duration.ofSeconds(SECONDS))
                 .onOverflow().drop()
                 .map(tick -> {
                     int idx = random.nextInt(todos.size());

@@ -13,7 +13,7 @@ package dev.unexist.showcase.todo.adapter;
 import dev.unexist.showcase.todo.domain.todo.Todo;
 import dev.unexist.showcase.todo.generated.avro.Todov1;
 import dev.unexist.showcase.todo.generated.avro.Todov2;
-import io.reactivex.Flowable;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.reactive.messaging.kafka.KafkaRecord;
 import org.apache.avro.specific.SpecificRecord;
 import org.apache.commons.lang3.BooleanUtils;
@@ -22,9 +22,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.time.Duration;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 @ApplicationScoped
 public class TodoGenerator {
@@ -42,9 +42,11 @@ public class TodoGenerator {
             new Todo("Sixth", "Bla-bla-bla-bla-bla-bla"));
 
     @Outgoing("todo-generator")
-    public Flowable<KafkaRecord<Integer, SpecificRecord>> generate() {
-        return Flowable.interval(SECONDS, TimeUnit.SECONDS)
-                .onBackpressureDrop()
+    public Multi<KafkaRecord<Integer, SpecificRecord>> generate() {
+        return Multi.createFrom()
+                .ticks()
+                .every(Duration.ofSeconds(SECONDS))
+                .onOverflow().drop()
                 .map(tick -> {
                     int idx = random.nextInt(this.todos.size());
                     Todo todo = todos.get(idx);
