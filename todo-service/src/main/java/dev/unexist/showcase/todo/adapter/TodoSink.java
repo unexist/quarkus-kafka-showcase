@@ -23,7 +23,7 @@ import javax.inject.Inject;
 
 @ApplicationScoped
 public class TodoSink {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TodoGenerator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TodoSink.class);
 
     @Inject
     TodoService todoService;

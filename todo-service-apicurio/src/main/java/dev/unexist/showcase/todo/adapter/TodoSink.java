@@ -24,7 +24,7 @@ import java.util.concurrent.CompletionStage;
 
 @ApplicationScoped
 public class TodoSink {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TodoGenerator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TodoSink.class);
 
     @Incoming("todo-sink")
     public CompletionStage<Void> receive(KafkaRecord<Integer, SpecificRecord> message) {
