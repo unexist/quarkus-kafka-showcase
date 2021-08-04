@@ -35,25 +35,12 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-avro</artifactId>
         </dependency>
-
-        <!-- Apicurio (Avro) -->
-        <!--<dependency>
-            <groupId>io.apicurio</groupId>
-            <artifactId>apicurio-registry-utils-serde</artifactId>
-            <version>${apicurio-registry-utils-serde.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.jboss.spec.javax.interceptor</groupId>
-                    <artifactId>jboss-interceptors-api_1.2_spec</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
         <dependency>
-            <groupId>io.quarkiverse.apicurio</groupId>
-            <artifactId>quarkiverse-apicurio-registry-client</artifactId>
-            <version>${quarkiverse-apicurio-registry-client.version}</version>
-        </dependency>-->
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-apicurio-registry-avro</artifactId>
+        </dependency>
 
+        <!-- Apicurio -->
         <dependency>
             <groupId>io.apicurio</groupId>
             <artifactId>apicurio-registry-serdes-avro-serde</artifactId>
@@ -123,4 +110,30 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>Avro</id>
+
+            <dependencies>
+                <!-- Apicurio (Avro) -->
+                <dependency>
+                    <groupId>io.apicurio</groupId>
+                    <artifactId>apicurio-registry-utils-serde</artifactId>
+                    <version>${apicurio-registry-utils-serde.version}</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>org.jboss.spec.javax.interceptor</groupId>
+                            <artifactId>jboss-interceptors-api_1.2_spec</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+                <dependency>
+                    <groupId>io.quarkiverse.apicurio</groupId>
+                    <artifactId>quarkiverse-apicurio-registry-client</artifactId>
+                    <version>${quarkiverse-apicurio-registry-client.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 </project>
