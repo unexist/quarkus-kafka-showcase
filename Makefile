@@ -28,8 +28,8 @@ todo:
 list:
 	@curl -X 'GET' 'http://localhost:8080/todo' -H 'accept: */*' | jq .
 
-kt-listen:
-	kt consume -topic todo_created
+open:
+	@open "http://localhost:8081"
 
 kat-listen:
 	kafkacat -t todo_created -b localhost:9092 -C -s value=avro -r http://localhost:8081
