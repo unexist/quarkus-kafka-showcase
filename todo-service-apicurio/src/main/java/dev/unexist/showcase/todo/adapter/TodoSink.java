@@ -36,14 +36,16 @@ public class TodoSink {
 
                 LOGGER.info("Got v1: title={}, description={}",
                         todov1.getTitle(), todov1.getDescription());
+
+                message.ack();
             } else if (Todov2.getClassSchema().equals(message.getPayload().getSchema())) {
                 Todov2 todov2 = (Todov2)message.getPayload();
 
                 LOGGER.info("Got v2: title={}, description={}, done={}",
                         todov2.getTitle(), todov2.getDescription(), todov2.getDone());
-            }
 
-            message.ack();
+                message.ack();
+            }
         });
     }
 
