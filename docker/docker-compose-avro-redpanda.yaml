@@ -1,0 +1,25 @@
+version: "3.5"
+
+services:
+
+  # Install redpanda
+  redpanda:
+    container_name: redpanda
+    image: vectorized/redpanda
+    hostname: redpanda
+    ports:
+      - "9092:9092"
+
+  # Install schema registry
+  schema-registry:
+    container_name: registry
+    image: apicurio/apicurio-registry-mem:2.0.0.Final
+    ports:
+      - 8081:8080
+    environment:
+      QUARKUS_PROFILE: prod
+      KAFKA_BOOTSTRAP_SERVERS: redpanda:9092
+      APPLICATION_ID: registry_id
+      APPLICATION_SERVER: localhost:9000
+    depends_on:
+      - redpanda
