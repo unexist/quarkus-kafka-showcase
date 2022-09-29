@@ -14,7 +14,7 @@
     </parent>
 
     <properties>
-        <smallrye-reactive.version>3.8.0</smallrye-reactive.version>
+        <smallrye-reactive.version>3.19.1</smallrye-reactive.version>
     </properties>
 
     <dependencies>
