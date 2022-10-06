@@ -29,7 +29,7 @@ services:
   # Install schema registry
   schema-registry:
     container_name: registry
-    image: confluentinc/cp-schema-registry:4.1.0
+    image: confluentinc/cp-schema-registry:5.4.10
     hostname: registry
     ports:
       - "8081:8081"
