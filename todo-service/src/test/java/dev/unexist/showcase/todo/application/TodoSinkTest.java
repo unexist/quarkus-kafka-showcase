@@ -2,8 +2,8 @@ package dev.unexist.showcase.todo.application;
 
 import dev.unexist.showcase.todo.domain.todo.TodoService;
 import io.quarkus.test.junit.QuarkusTest;
-import io.smallrye.reactive.messaging.connectors.InMemoryConnector;
-import io.smallrye.reactive.messaging.connectors.InMemorySource;
+import io.smallrye.reactive.messaging.providers.connectors.InMemoryConnector;
+import io.smallrye.reactive.messaging.providers.connectors.InMemorySource;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
