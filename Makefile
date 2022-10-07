@@ -28,7 +28,7 @@ todo:
 list:
 	@curl -X 'GET' 'http://localhost:8080/todo' -H 'accept: */*' | jq .
 
-open:
+registry-open:
 	@open "http://localhost:8081"
 
 kat-listen:
