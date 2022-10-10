@@ -21,6 +21,39 @@ docker:
 	@docker-compose -f docker/docker-compose-avro.yaml \
 		-p kafka-avro up
 
+# Podman
+PODNAME := avroregistry
+
+pd-machine-init:
+	@podman machine init --memory=8192 --cpus=2 --disk-size=20
+
+pd-machine-start:
+	@podman machine start
+
+pd-machine-rm:
+	@podman machine rm
+
+pd-machine-recreate: pd-machine-rm pd-machine-init pd-machine-start
+
+pd-pod-create:
+	@podman pod create -n $(PODNAME) --network bridge \
+      	-p 8081:8080 -p 9092:9092
+
+pd-redpanda:
+	@podman run -dit --name redpanda --pod=$(PODNAME) vectorized/redpanda
+
+pd-registry:
+	@podman run -dit --name registry --pod=$(PODNAME) \
+		-e "QUARKUS_PROFILE=prod" \
+		-e "KAFKA_BOOTSTRAP_SERVERS=redpanda:9092" \
+		-e "APPLICATION_ID=registry_id" \
+		-e "APPLICATION_SERVER=localhost:9000" \
+		apicurio/apicurio-registry-mem:2.3.1.Final
+
+pd-init: pd-machine-init pd-machine-start pd-pod-create
+
+pd-start: pd-redpanda pd-registry
+
 # Tools
 todo:
 	@echo $$JSON_TODO | bash
