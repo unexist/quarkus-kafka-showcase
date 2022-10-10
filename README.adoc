@@ -1,10 +1,10 @@
-= Showcase for kafka based on quarkus
+= Showcase for Kafka based on Quarkus
 
-This project holds a showcase for various kafka related things.
+This project holds a showcase for various Kafka related things.
 
 == todo-service
 
-This example just demonstrates how to use kafka along with in-memory testing of Smallrye.
+This example just demonstrates how to use Kafka along with in-memory testing of Smallrye.
 
 == todo-service-apicurio
 
