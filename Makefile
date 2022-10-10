@@ -37,7 +37,12 @@ pd-machine-recreate: pd-machine-rm pd-machine-init pd-machine-start
 
 pd-pod-create:
 	@podman pod create -n $(PODNAME) --network bridge \
-      	-p 8081:8080 -p 9092:9092
+	-p 8081:8080 -p 9000 -p 9092:9092
+
+pd-pod-rm:
+	@podman pod rm -f $(PODNAME)
+
+pd-pod-recreate: pd-pod-rm pd-pod-create
 
 pd-redpanda:
 	@podman run -dit --name redpanda --pod=$(PODNAME) vectorized/redpanda
