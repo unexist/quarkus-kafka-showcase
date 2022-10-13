@@ -16,5 +16,6 @@
     <modules>
         <module>todo-service</module>
         <module>todo-service-apicurio</module>
+        <module>todo-service-karapace</module>
     </modules>
 </project>
