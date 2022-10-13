@@ -37,7 +37,7 @@ pd-machine-recreate: pd-machine-rm pd-machine-init pd-machine-start
 
 pd-pod-create:
 	@podman pod create -n $(PODNAME) --network bridge \
-	-p 8081:8080 -p 9000 -p 9092:9092
+	-p 8081:8080 -p 9000-9002 -p 9092:9092
 
 pd-pod-rm:
 	@podman pod rm -f $(PODNAME)
@@ -47,17 +47,46 @@ pd-pod-recreate: pd-pod-rm pd-pod-create
 pd-redpanda:
 	@podman run -dit --name redpanda --pod=$(PODNAME) vectorized/redpanda
 
-pd-registry:
-	@podman run -dit --name registry --pod=$(PODNAME) \
+pd-registry-apicurio:
+	@podman run -dit --name registry-apicurio --pod=$(PODNAME) \
 		-e "QUARKUS_PROFILE=prod" \
 		-e "KAFKA_BOOTSTRAP_SERVERS=redpanda:9092" \
 		-e "APPLICATION_ID=registry_id" \
 		-e "APPLICATION_SERVER=localhost:9000" \
 		apicurio/apicurio-registry-mem:2.3.1.Final
 
+pd-registry-karapace:
+	@podman run -dit --name registry-karapace --pod=$(PODNAME) \
+		--entrypoint=/bin/bash /opt/karapace/start.sh registry" \
+		-e "KARAPACE_ADVERTISED_HOSTNAME=karapace-registry" \
+		-e "KARAPACE_BOOTSTRAP_URI=redpanda:9092" \
+		-e "KARAPACE_PORT=9001" \
+		-e "KARAPACE_HOST=0.0.0.0" \
+		-e "KARAPACE_CLIENT_ID=karapace" \
+		-e "KARAPACE_GROUP_ID=karapace-registry" \
+		-e "KARAPACE_MASTER_ELIGIBILITY=true" \
+		-e "KARAPACE_TOPIC_NAME=_schemas" \
+		-e "KARAPACE_LOG_LEVEL=WARNING" \
+		-e "KARAPACE_COMPATIBILITY=FULL" \
+		ghcr.io/aiven/karapace:develop
+
+pd-registry-karapace-rest:
+	@podman run -dit --name registry-karapace-rest --pod=$(PODNAME) \
+		-e "KARAPACE_PORT=9002" \
+		-e "KARAPACE_HOST=0.0.0.0" \
+		-e "KARAPACE_ADVERTISED_HOSTNAME=karapace-rest" \
+		-e "KARAPACE_BOOTSTRAP_URI=redpanda:9092" \
+		-e "KARAPACE_REGISTRY_HOST=karapace-registry" \
+		-e "KARAPACE_REGISTRY_PORT=9001" \
+		-e "KARAPACE_ADMIN_METADATA_MAX_AGE=0" \
+		-e "KARAPACE_LOG_LEVEL=WARNING" \
+    	ghcr.io/aiven/karapace:develop
+
 pd-init: pd-machine-init pd-machine-start pd-pod-create
 
-pd-start: pd-redpanda pd-registry
+pd-start-apicurio: pd-redpanda pd-registry-apicurio
+
+pd-start-karapace: pd-redpanda pd-registry-karapace pd-registry-karapace-rest
 
 # Tools
 todo:
