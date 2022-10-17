@@ -57,7 +57,7 @@ pd-registry-apicurio:
 
 pd-registry-karapace:
 	@podman run -dit --name registry-karapace --pod=$(PODNAME) \
-		--entrypoint=/bin/bash /opt/karapace/start.sh registry" \
+		--entrypoint="/bin/bash /opt/karapace/start.sh registry" \
 		-e "KARAPACE_ADVERTISED_HOSTNAME=karapace-registry" \
 		-e "KARAPACE_BOOTSTRAP_URI=redpanda:9092" \
 		-e "KARAPACE_PORT=9001" \
@@ -72,6 +72,7 @@ pd-registry-karapace:
 
 pd-registry-karapace-rest:
 	@podman run -dit --name registry-karapace-rest --pod=$(PODNAME) \
+		--entrypoint="/bin/bash /opt/karapace/start.sh rest" \
 		-e "KARAPACE_PORT=9002" \
 		-e "KARAPACE_HOST=0.0.0.0" \
 		-e "KARAPACE_ADVERTISED_HOSTNAME=karapace-rest" \
