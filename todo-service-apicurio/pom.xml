@@ -54,7 +54,7 @@
             <version>${quarkiverse-apicurio-registry-client.version}</version>
         </dependency> -->
 
-        <!-- Apicurio -->
+        <!-- Apicurio serde -->
         <dependency>
             <groupId>io.apicurio</groupId>
             <artifactId>apicurio-registry-serdes-avro-serde</artifactId>
