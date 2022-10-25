@@ -14,7 +14,7 @@
     </parent>
 
     <properties>
-        <smallrye-reactive.version>3.20.0</smallrye-reactive.version>
+        <smallrye-reactive.version>4.0.0</smallrye-reactive.version>
         <avro-maven-plugin.version>1.10.2</avro-maven-plugin.version>
         <kafka-avro-serializer.version>7.2.0</kafka-avro-serializer.version>
     </properties>
