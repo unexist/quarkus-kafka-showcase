@@ -29,7 +29,7 @@ public class TodoSink {
     @Incoming("todo-sink")
     public CompletionStage<Void> receive(KafkaRecord<Integer, SpecificRecord> message) {
         return CompletableFuture.runAsync(() -> {
-            LOGGER.error("Read: {}: {}", message.getPayload().getSchema().getFullName(), message.getPayload());
+            LOGGER.info("Read: {}: {}", message.getPayload().getSchema().getFullName(), message.getPayload());
 
             if (Todov1.getClassSchema().equals(message.getPayload().getSchema())) {
                 Todov1 todov1 = (Todov1)message.getPayload();
