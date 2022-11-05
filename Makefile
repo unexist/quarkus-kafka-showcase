@@ -96,8 +96,11 @@ todo:
 list:
 	@curl -X 'GET' 'http://localhost:8080/todo' -H 'accept: */*' | jq .
 
-registry-open:
-	@open "http://localhost:8081"
+registry-apicurio-open:
+	@open "http://localhost:9000"
+
+registry-karapace-open:
+	@open "http://localhost:9001"
 
 kat-listen:
 	kafkacat -t todo_created -b localhost:9092 -C -s value=avro -r http://localhost:8081
