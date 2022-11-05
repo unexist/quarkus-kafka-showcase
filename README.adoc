@@ -8,7 +8,7 @@ This example just demonstrates how to use Kafka along with in-memory testing of 
 
 == todo-service-apicurio
 
-This uses the Avro format and Apicurio as registry.
+This uses the Avro format and Apicurio for registry.
 
 === Apicurio config
 
@@ -16,7 +16,7 @@ This uses the Avro format and Apicurio as registry.
 
 == todo-service-karapace
 
-This uses the Avro format and Karapace as registry.
+This uses the Avro format and Karapace for registry.
 
 == Notes
 
@@ -34,3 +34,4 @@ This uses the Avro format and Karapace as registry.
 - https://avro.apache.org/docs/
 - https://quarkus.io/guides/kafka-dev-services
 - https://github.com/aiven/karapace
+- https://docs.confluent.io/platform/current/schema-registry/serdes-develop/index.html#subject-name-strategy
