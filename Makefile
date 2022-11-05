@@ -94,22 +94,45 @@ todo:
 	@echo $$JSON_TODO | bash
 
 list:
-	@curl -X 'GET' 'http://localhost:8080/todo' -H 'accept: */*' | jq .
+	@curl -X "GET" "http://localhost:8080/todo" -H 'accept: */*' | jq .
 
-registry-apicurio-open:
+open-apicurio:
 	@open "http://localhost:9000"
 
-registry-karapace-open:
+open-karapace:
 	@open "http://localhost:9001"
 
+# Karapace
 karapace-list-schemas:
 	@curl -X GET http://localhost:9001/schemas
 
 karapace-list-subjects:
 	@curl -X GET http://localhost:9001/subjects
 
-kat-listen:
-	@kafkacat -t todo_created -b localhost:9092 -C -s value=avro -r http://localhost:8081
+# Karapace REST (https://developer.confluent.io/get-started/rest/)
+karapace-rest-register:
+	@curl -X POST -H "Content-Type: application/vnd.kafka.v2+json" \
+		--data '{"name": "unexist", "format": "json", "auto.offset.reset": "earliest"}' \
+		http://localhost:9002/consumers/unexist
 
+karapace-rest-subscribe:
+	@curl -X POST -H "Content-Type: application/vnd.kafka.v2+json" \
+		--data '{"topics":["todo_created"]}' \
+		http://localhost:9002/consumers/unexist/instances/unexist/subscription
+
+karapace-rest-consume:
+	@curl -X GET -H "Accept: application/vnd.kafka.json.v2+json" \
+		http://localhost:9002/consumers/unexist/instances/unexist/records
+
+# Kafkacat
 kat-test:
-	@kafkacat -t todo_created -b localhost:9092 -P
+	@kcat -t todo_created -b localhost:9092 -P
+
+kat-listen:
+	@kcat -t todo_created -b localhost:9092 -C
+
+kat-listen-apicurio:
+	@kcat -t todo_created -b localhost:9092 -C -s value=avro -r http://localhost:9000
+
+kat-listen-karapace:
+	@kcat -t todo_created -b localhost:9092 -C -s value=avro -r http://localhost:9001
