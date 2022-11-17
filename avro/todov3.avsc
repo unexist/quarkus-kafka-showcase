@@ -1,0 +1,33 @@
+{
+  "namespace": "dev.unexist.showcase.todo.generated.avro",
+  "type": "record",
+  "name": "Todov3",
+  "fields": [
+    {
+      "name": "title",
+      "type": "string"
+    },
+    {
+      "name": "description",
+      "type": "string"
+    },
+    {
+      "name": "done",
+      "type": "boolean"
+    },
+    {
+      "name": "dueDate",
+      "type": "record",
+      "fields": [
+        {
+          "name": "startDate",
+          "type": "string"
+        },
+        {
+          "name": "dueDate",
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}
