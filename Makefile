@@ -97,7 +97,7 @@ list:
 	@curl -X "GET" "http://localhost:8080/todo" -H 'accept: */*' | jq .
 
 open-apicurio:
-	@open "http://localhost:9000"
+	@open "http://localhost:8081"
 
 open-karapace:
 	@open "http://localhost:9001"
